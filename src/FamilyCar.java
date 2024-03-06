@@ -19,6 +19,15 @@ public class FamilyCar extends Car{
         this.seat = seat;
     }
 
+    public FamilyCar(int famId, Gear gear,
+                     boolean aircondition, boolean speedPilot, Seat seat) {
+        this.famId = famId;
+        this.gear = gear;
+        this.aircondition = aircondition;
+        this.speedPilot = speedPilot;
+        this.seat = seat;
+    }
+
     public FamilyCar() {
 
     }
@@ -41,5 +50,16 @@ public class FamilyCar extends Car{
 
     public Seat getSeat() {
         return seat;
+    }
+
+    @Override
+    public String toString() {
+        return "FamilyCar{" +
+                "famId=" + famId +
+                ", gear=" + gear +
+                ", aircondition=" + aircondition +
+                ", speedPilot=" + speedPilot +
+                ", seat=" + seat +
+                '}';
     }
 }

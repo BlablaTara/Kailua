@@ -10,12 +10,12 @@ public class Renter {
     private int mobile;
     private int phone;
     private String email;
-    private int licenseNumber;
+    private int driverLicenseNumber;
     private LocalDate licenseDateOfIssue;
 
 
     public Renter(int rentId, String fullName, String adress, int zipcode,
-                  String city, int mobile, int phone, String email, int licenseNumber,
+                  String city, int mobile, int phone, String email, int driverLicenseNumber,
                   LocalDate licenseDateOfIssue) {
         this.rentId = rentId;
         this.fullName = fullName;
@@ -25,12 +25,12 @@ public class Renter {
         this.mobile = mobile;
         this.phone = phone;
         this.email = email;
-        this.licenseNumber = licenseNumber;
+        this.driverLicenseNumber = driverLicenseNumber;
         this.licenseDateOfIssue = licenseDateOfIssue;
     }
 
     public Renter(String fullName, String adress, int zipcode,
-                  String city, int mobile, int phone, String email, int licenseNumber,
+                  String city, int mobile, int phone, String email, int driverLicenseNumber,
                   LocalDate licenseDateOfIssue) {
         this.fullName = fullName;
         this.adress = adress;
@@ -39,8 +39,15 @@ public class Renter {
         this.mobile = mobile;
         this.phone = phone;
         this.email = email;
-        this.licenseNumber = licenseNumber;
+        this.driverLicenseNumber = driverLicenseNumber;
         this.licenseDateOfIssue = licenseDateOfIssue;
+    }
+
+    public Renter() {
+    }
+
+    public Renter(int rentId, String fullName, String adress, int zipcode, String city, int driverLicenseNumber) {
+
     }
 
     public int getRentId() {
@@ -75,11 +82,27 @@ public class Renter {
         return email;
     }
 
-    public int getLicenseNumber() {
-        return licenseNumber;
+    public int getDriverLicenseNumber() {
+        return driverLicenseNumber;
     }
 
     public LocalDate getLicenseDateOfIssue() {
         return licenseDateOfIssue;
+    }
+
+    @Override
+    public String toString() {
+        return "Renter{" +
+                "rentId=" + rentId +
+                ", fullName='" + fullName + '\'' +
+                ", adress='" + adress + '\'' +
+                ", zipcode=" + zipcode +
+                ", city='" + city + '\'' +
+                ", mobile=" + mobile +
+                ", phone=" + phone +
+                ", email='" + email + '\'' +
+                ", driverLicenseNumber=" + driverLicenseNumber +
+                ", licenseDateOfIssue=" + licenseDateOfIssue +
+                '}';
     }
 }

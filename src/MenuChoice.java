@@ -9,5 +9,6 @@ public enum MenuChoice {
     DELETE_RENTER,
     SEARCH_RENTER,
     UPDATE_RENTER,
+    CREATE_CONTRACT,
     QUIT
 }

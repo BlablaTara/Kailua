@@ -59,4 +59,16 @@ public class LuxuryCar extends Car{
     public boolean isLeatherSeats() {
         return leatherSeats;
     }
+
+    @Override
+    public String toString() {
+        return "LuxuryCar{" +
+                "luxId=" + luxId +
+                ", ccm=" + ccm +
+                ", gear=" + gear +
+                ", aircondition=" + aircondition +
+                ", speedPilot=" + speedPilot +
+                ", leatherSeats=" + leatherSeats +
+                '}';
+    }
 }
