@@ -1,0 +1,142 @@
+CREATE DATABASE IF NOT EXISTS Kailua_Car_Rental;
+
+use Kailua_Car_Rental;
+
+-- Laver Car table (Parent table)
+create table Car(
+car_id int auto_increment primary key,
+brand varchar(50),
+model varchar(50),
+fuel_type varchar(50),
+registration_number varchar(50),
+registration_year_month date,
+drivin_km double
+);
+
+-- Laver Luxery Car table (Child table)
+create table Luxery(
+lux_id int auto_increment primary key,
+ car_id int,
+ foreign key (car_id) references Car(car_id) on delete cascade,
+ccm double check(ccm>=3000),
+gear enum('automatgear',
+			'manueltgear',
+			'manueltgear_4',
+            'manueltgear_5',
+            'manueltgear_6',
+            'manueltgear_7'),
+aricondition boolean,
+speedpilot boolean,
+leatherseats boolean
+);
+
+-- Laver Family Car table (Child table)
+create table Family(
+fam_id int auto_increment primary key,
+ car_id int,
+ foreign key (car_id) references Car(car_id) on delete cascade,
+gear enum('automatgear',
+			'manueltgear',
+			'manueltgear_4',
+            'manueltgear_5',
+            'manueltgear_6',
+            'manueltgear_7'),
+aricondition boolean,
+speedpilot boolean,
+seats enum('SEVEN', 'EIGHT', 'NINE', 'TENPLUS')
+);
+
+-- Laver Sports Car table (Child table)
+create table Sport(
+sport_id int auto_increment primary key,
+ car_id int,
+ foreign key (car_id) references Car(car_id) on delete cascade,
+gear enum('automatgear',
+			'manueltgear',
+			'manueltgear_4',
+            'manueltgear_5',
+            'manueltgear_6',
+            'manueltgear_7'),
+hp double check(hp>=200)
+);
+
+-- Laver Renters table (Parent table)
+create table Renter(
+rent_id int auto_increment primary key,
+fullname varchar(50),
+adress varchar(50),
+zipcode int,
+city varchar(50),
+mobil int,
+phone int,
+e_mail varchar(50),
+driver_license_number int,
+license_date_of_issue date
+);
+
+-- Laver Contract table (Child table)
+create table Contract(
+contract_id int auto_increment primary key,
+ rent_id int,
+ foreign key (rent_id) references Renter(rent_id) on delete cascade,
+date_from datetime,
+date_to datetime,
+max_km double,
+km_start double,
+registration_number varchar(50)
+);
+
+-- Opretter default data dummies
+
+-- Først til Luxury cars
+INSERT INTO Car (brand, model, fuel_type, registration_number, registration_year_month, drivin_km)
+VALUES
+  ('Mercedes', 'S-Class', 'Gasoline', 'ABC123', '2023-01-01', 5000),
+  ('BMW', '7 Series', 'Diesel', 'XYZ456', '2022-05-01', 3000),
+  ('Audi', 'A8', 'Gasoline', 'DEF789', '2022-08-01', 7000);
+
+
+INSERT INTO Luxery (car_id, ccm, gear, aricondition, speedpilot, leatherseats)
+VALUES
+  (1, 3500, 'automatgear', 1, 1, 1),
+  (2, 3200, 'automatgear', 1, 1, 1),
+  (3, 3300, 'automatgear', 1, 1, 1);
+
+-- Dernæst til Family cars
+INSERT INTO Car (brand, model, fuel_type, registration_number, registration_year_month, drivin_km)
+VALUES
+  ('Toyota', 'Sienna', 'Gasoline', 'ABC123', '2023-01-01', 5000),
+  ('Honda', 'Odyssey', 'Gasoline', 'XYZ456', '2022-05-01', 3000),
+  ('Chrysler', 'Pacifica', 'Hybrid', 'DEF789', '2022-08-01', 7000);
+
+INSERT INTO Family (car_id, gear, aricondition, speedpilot, seats)
+VALUES
+  (4, 'automatgear', 1, 1, 'EIGHT'),
+  (5, 'manueltgear_5', 1, 1, 'SEVEN'),
+  (6, 'automatgear', 1, 1, 'TENPLUS');
+
+  -- Sport Car.
+  INSERT INTO Car (brand, model, fuel_type, registration_number, registration_year_month, drivin_km)
+VALUES
+  ('Ferrari', '488 GTB', 'Gasoline', 'ABC123', '2023-01-01', 5000),
+  ('Porsche', '911', 'Gasoline', 'XYZ456', '2022-05-01', 3000),
+  ('Lamborghini', 'Huracan', 'Gasoline', 'DEF789', '2022-08-01', 7000);
+
+INSERT INTO Sport (car_id, gear, hp)
+VALUES
+  (7, 'automatgear', 700),
+  (8, 'manueltgear_6', 500),
+  (9, 'automatgear', 800);
+
+  -- Default renters
+  INSERT INTO Renter (fullname, adress, zipcode, city, mobil, phone, e_mail, driver_license_number, license_date_of_issue)
+VALUES
+  ('John Doe', '123 Main St', 12345, 'Cityville', 123456789, 987654321, 'john.doe@example.com', 123456789, '2022-01-15'),
+  ('Jane Smith', '456 Oak St', 56789, 'Townsville', 987654321, 123456789, 'jane.smith@example.com', 987654321, '2022-02-20'),
+  ('Bob Johnson', '789 Maple St', 54321, 'Villagetown', 111222333, 444555666, 'bob.johnson@example.com', 111222333, '2022-03-25');
+
+  INSERT INTO Contract (rent_id, date_from, date_to, max_km, km_start, registration_number)
+VALUES
+  (1, '2023-01-01', '2023-01-15', 1000, 200, 'ABC123'),
+  (2, '2023-02-01', '2023-02-20', 1200, 300, 'XYZ456'),
+  (3, '2023-03-01', '2023-03-25', 800, 150, 'DEF789');
