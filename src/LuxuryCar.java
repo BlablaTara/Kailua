@@ -3,7 +3,7 @@ import java.time.LocalDate;
 public class LuxuryCar extends Car{
 
     private int luxId;
-    private int ccm;
+    private double ccm;
     private Gear gear;
     private boolean aircondition;
     private boolean speedPilot;
@@ -11,7 +11,7 @@ public class LuxuryCar extends Car{
 
     public LuxuryCar(int carId, String brand, String model, String fuelType,
                      String registrationNumber, LocalDate registrationYearMonth,
-                     int drivinKm, int luxId, int ccm, Gear gear, boolean aircondition,
+                     double drivinKm, int luxId, double ccm, Gear gear, boolean aircondition,
                      boolean speedPilot, boolean leatherSeats) {
         super(carId, brand, model, fuelType, registrationNumber, registrationYearMonth, drivinKm);
         this.luxId = luxId;
@@ -22,7 +22,22 @@ public class LuxuryCar extends Car{
         this.leatherSeats = leatherSeats;
     }
 
-    public LuxuryCar( int luxId, int ccm, Gear gear, boolean aircondition,
+
+    public LuxuryCar(String brand, String model, String fuelType,
+                     String registrationNumber, LocalDate registrationYearMonth,
+                     double drivinKm, int luxId, double ccm, Gear gear, boolean aircondition,
+                     boolean speedPilot, boolean leatherSeats) {
+        super(brand, model, fuelType, registrationNumber, registrationYearMonth, drivinKm);
+        this.luxId = luxId;
+        this.ccm = ccm;
+        this.gear = gear;
+        this.aircondition = aircondition;
+        this.speedPilot = speedPilot;
+        this.leatherSeats = leatherSeats;
+    }
+
+
+    public LuxuryCar( int luxId, double ccm, Gear gear, boolean aircondition,
                      boolean speedPilot, boolean leatherSeats) {
         this.luxId = luxId;
         this.ccm = ccm;
@@ -40,7 +55,7 @@ public class LuxuryCar extends Car{
         return luxId;
     }
 
-    public int getCcm() {
+    public double getCcm() {
         return ccm;
     }
 

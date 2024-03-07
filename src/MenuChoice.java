@@ -1,6 +1,7 @@
 public enum MenuChoice {
     CREATE_CAR,
     SHOW_ALL_CARS,
+    SHOW_LUXURY_CARS,
     DELETE_CAR,
     SEARCH_CAR,
     UPDATE_CAR,
@@ -10,5 +11,6 @@ public enum MenuChoice {
     SEARCH_RENTER,
     UPDATE_RENTER,
     CREATE_CONTRACT,
+    SHOW_ALL_FULL_CONTRACTS,
     QUIT
 }

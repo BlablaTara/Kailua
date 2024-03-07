@@ -5,8 +5,8 @@ import java.util.Scanner;
 
 public class MySQLConnection {
     String database = "jdbc:mysql://localhost:3306/kailua_car_rental";
-    String username = "root";
-    String password = "LeonaLiva2304";
+    String username = "XXX";
+    String password = "XXX";
     private Connection connection = null;
 
     public MySQLConnection() {
@@ -36,16 +36,17 @@ public class MySQLConnection {
 
 
     /* ************************************ CAR STUFF ************************************/ //TODO
-    // ADD CAR *
-    // SPECIFY CAR *
-    // GET ALL CARS *
-    // DELETE CAR *
-    // SEARCH FOR CAR *
-    // UPDATE CAR *
-    // GET LATEST CAR ID *
-    // CREATE LUXURY CAR *
-    // CREATE FAMILY CAR *
-    // CREATE SPORTS CAR *
+    // ADD CAR
+    // SPECIFY CAR
+    // GET ALL CARS
+    // GET LUXURY CAR
+    // DELETE CAR
+    // SEARCH FOR CAR
+    // UPDATE CAR
+    // GET LATEST CAR ID
+    // CREATE LUXURY CAR
+    // CREATE FAMILY CAR
+    // CREATE SPORTS CAR
 
     public void addCar(Car car) {
         try {
@@ -56,7 +57,7 @@ public class MySQLConnection {
             preparedStatement.setString(3, car.getFuelType());
             preparedStatement.setString(4, car.getRegistrationNumber());
             preparedStatement.setDate(5, Date.valueOf(car.getRegistrationYearMonth()));
-            preparedStatement.setInt(6, car.getDrivinKm());
+            preparedStatement.setDouble(6, car.getDrivinKm());
 
             preparedStatement.executeUpdate();
 
@@ -89,7 +90,7 @@ public class MySQLConnection {
                 String fuelType = rs.getString("fuel_type");
                 String registrationNumber = rs.getString("registration_number");
                 LocalDate registrationYearMonth = rs.getDate("registration_year_month").toLocalDate();
-                int drivinKm = rs.getInt("drivin_km");
+                double drivinKm = rs.getDouble("drivin_km");
                 Car car = new Car (carId, brand, model, fuelType, registrationNumber, registrationYearMonth, drivinKm);
                 cars.add(car);
             }
@@ -98,6 +99,44 @@ public class MySQLConnection {
         }
         return cars;
     }
+
+    public ArrayList<LuxuryCar> getLuxuryCar() {
+        ArrayList<LuxuryCar> luxuryCars = new ArrayList<>();
+        String query = "SELECT l.lux_id, c.brand, c.model, c.fuel_type, c.registration_number, c.registration_year_month, c.drivin_km, \n" +
+                "\t\tl.ccm, l.gear, l.aricondition, l.speedpilot, l.leatherseats\n" +
+                "FROM Car c JOIN Luxery l\n" +
+                "WHERE c.car_id = l.car_id;";
+
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+            while (rs.next()) {
+                int luxId = rs.getInt("lux_id");
+
+                String brand = rs.getString("brand");
+                String model = rs.getString("model");
+                String fuelType = rs.getString("fuel_type");
+                String registrationNumber = rs.getString("registration_number");
+                LocalDate registrationYearMonth = rs.getDate("registration_year_month").toLocalDate();
+                double drivinKm = rs.getInt("drivin_km");
+                double ccm = rs.getInt("ccm");
+                String gearString = rs.getString("gear");
+                Gear gear = Gear.valueOf(gearString);
+                boolean aircon = rs.getBoolean("aricondition");
+                boolean speedPilot = rs.getBoolean("speedpilot");
+                boolean leatherSeats = rs.getBoolean("leatherseats");
+
+                LuxuryCar luxuryCar = new LuxuryCar(brand, model, fuelType, registrationNumber, registrationYearMonth,
+                        drivinKm, luxId, ccm, gear, aircon, speedPilot, leatherSeats);
+
+                luxuryCars.add(luxuryCar);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return luxuryCars;
+    }
+
+
 
     public void deleteCar(int car_id) {
         String query = "DELETE FROM car WHERE car_id = ?;";
@@ -128,7 +167,7 @@ public class MySQLConnection {
                     String fuelType = rs.getString("fuel_type");
                     String registrationnumber = rs.getString("registration_number");
                     LocalDate registrationYearMonth = rs.getDate("registration_year_month").toLocalDate();
-                    int drivinKm = rs.getInt("drivin_km");
+                    double drivinKm = rs.getDouble("drivin_km");
                     Car car = new Car(carId, brand, model, fuelType, registrationnumber, registrationYearMonth, drivinKm);
 
                     System.out.println("Here is the car you have searched for: \n" + car);
@@ -219,10 +258,10 @@ public class MySQLConnection {
         else if (update.equalsIgnoreCase("drivin_km")) {
             try {
                 System.out.println("Enter the new driving km: ");
-                int newDrivinKm = scanner.nextInt();
+                double newDrivinKm = scanner.nextDouble();
                 String query = "UPDATE car SET drivin_km = ? WHERE car_id = ?";
                 PreparedStatement preparedStatement = connection.prepareStatement(query);
-                preparedStatement.setInt(1, newDrivinKm);
+                preparedStatement.setDouble(1, newDrivinKm);
                 preparedStatement.setInt(2, car_id);
                 preparedStatement.executeUpdate();
             } catch (SQLException e) {
@@ -256,7 +295,7 @@ public class MySQLConnection {
             String query = "INSERT INTO Luxery (car_id, ccm, gear, aricondition, speedpilot, leatherseats) VALUES (?, ?, ?, ?, ?, ?)"; // A'RI'CONDITION SKAL RETTES I SQL. speed_pilot er rettet til speedpilot
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, carId);
-            preparedStatement.setInt(2, luxuryCar.getCcm());
+            preparedStatement.setDouble(2, luxuryCar.getCcm());
             preparedStatement.setString(3, luxuryCar.getGear().name());
             preparedStatement.setBoolean(4, luxuryCar.isAircondition());
             preparedStatement.setBoolean(5, luxuryCar.isSpeedPilot());
@@ -297,7 +336,7 @@ public class MySQLConnection {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, carId);
             preparedStatement.setString(2, sportsCar.getGear().name());
-            preparedStatement.setInt(3, sportsCar.getHp());
+            preparedStatement.setDouble(3, sportsCar.getHp());
 
             preparedStatement.executeUpdate();
 
@@ -314,7 +353,6 @@ public class MySQLConnection {
     // GET ALL RENTERS *
     // DELETE RENTER *
     // SEARCH FOR RENTER *
-    // GET RENTER WITH ID *
 
     public void addRenter(Renter renter) {
         try {
@@ -375,7 +413,6 @@ public class MySQLConnection {
 
             System.out.println("Renter deleted successfully.");
         } catch (SQLException e) {
-            //throw new RuntimeException(e);
             System.out.println("EXCEPTION: " + e.getStackTrace());
         }
     }
@@ -409,32 +446,14 @@ public class MySQLConnection {
         }
     }
 
-    public int getRenterWithId(){ //TODO
-        try {
-            String query = "SELECT rent_id FROM Renter";
-            try (Statement statement = connection.createStatement();
-                 ResultSet resultSet = statement.executeQuery(query)) {
-                if (resultSet.next()) {
-                    return resultSet.getInt("rent_id");
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return -1;
-    }
-
 
 
 /* ************************************ CONTRACT STUFF ************************************///TODO
-// ADD CONTRACT
-// DELETE CONTRACT
-// SEARCH FOR CONTRACT
-// UPDATE CONTRACT
-// RENTER CONTRACT MATCH *
+// ADD CONTRACT *
+// GET FULL CONTRACTS *
 
 
-    public void addContract (Renter renter, int rentId) { // TODO
+    public void addContract (Renter renter, int rentId) {
         Contract contract = (Contract) renter;
         try {
             String query = "INSERT INTO Contract (rent_id, date_from, date_to, max_km, km_start, registration_number) VALUES (?, ?, ?, ?, ?, ?)"; //TODO
@@ -442,8 +461,8 @@ public class MySQLConnection {
             preparedStatement.setInt(1, rentId);
             preparedStatement.setObject(2, contract.getDateFrom());
             preparedStatement.setObject(3, contract.getDateTo());
-            preparedStatement.setInt(4, contract.getMaxKm());
-            preparedStatement.setInt(5, contract.getKmStart());
+            preparedStatement.setDouble(4, contract.getMaxKm());
+            preparedStatement.setDouble(5, contract.getKmStart());
             preparedStatement.setString(6, contract.getRegistrationNumber());
 
             preparedStatement.executeUpdate();
@@ -456,19 +475,40 @@ public class MySQLConnection {
     }
 
 
+    public ArrayList<Contract> getFullContracts() {
+        ArrayList<Contract> fullContracs = new ArrayList<>();
+        String query = "SELECT c.contract_id, r.fullname, r.adress, r.zipcode, r.city, r.driver_license_number, \n" +
+                "\t\t c.date_from, c.date_to, c.max_km, c.km_start, c.registration_number\n" +
+                "FROM Renter r JOIN Contract c \n" +
+                "WHERE r.rent_id = c.rent_id;";
 
-   /* public void renterContractMatch (Renter renter, int rent_id, int inputChoice){ // fjernet 'sout' herfra og sat den i createCar(); i Menu
-        switch (inputChoice) {
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+            while (rs.next()) {
+                int contractId = rs.getInt("contract_id");
 
-            case 1 -> createLuxuryCar(renter, rent_id);
-            case 2 -> createFamilyCar(renter, car_id);
-            case 3 -> createSportsCar(renter, car_id);
+                String fullName = rs.getString("fullname");
+                String adress = rs.getString("adress");
+                int zipcode = rs.getInt("zipcode");
+                String city = rs.getString("city");
+                int driverLicenseNumber = rs.getInt("driver_license_number");
+
+                LocalDate dateFrom = rs.getDate("date_from").toLocalDate();
+                LocalDate dateTo = rs.getDate("date_to").toLocalDate();
+                double maxKm= rs.getInt("max_km");
+                double kmStart = rs.getInt("km_start");
+                String registrationNumber = rs.getString("registration_number");
+
+                Contract contract = new Contract(fullName, adress, zipcode, city, driverLicenseNumber, contractId,
+                        dateFrom, dateTo, maxKm, kmStart, registrationNumber);
+
+                fullContracs.add(contract);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-
+        return fullContracs;
     }
 
-    */
-
-    // mySqlConnection.renterContractMatch(sportsCar, car_id, inputChoice);
 
 }

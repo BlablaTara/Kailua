@@ -28,6 +28,7 @@ public class Menu {
             switch (menuChoice) {
                 case CREATE_CAR -> createCar();
                 case SHOW_ALL_CARS -> showAllCars();
+                case SHOW_LUXURY_CARS -> showLuxuryCars();
                 case DELETE_CAR -> deleteCar();
                 case SEARCH_CAR -> searchCar();
                 case UPDATE_CAR -> updateCar();
@@ -36,6 +37,7 @@ public class Menu {
                 case DELETE_RENTER -> deleteRenter();
                 case SEARCH_RENTER -> searchRenter();
                 case CREATE_CONTRACT -> createContract();
+                case SHOW_ALL_FULL_CONTRACTS -> showAllFullContracts();
                 case QUIT -> running = false;
             }
         }
@@ -48,16 +50,18 @@ public class Menu {
         System.out.println("\nMAIN MENU\n" +
                 " 1. Create Car\n" +
                 " 2. Show all Cars\n" +
-                " 3. Delete Car\n" +
-                " 4. Search Car\n" +
-                " 5. Update Car\n" +
+                " 3. Show luxury Cars\n" +
+                " 4. Delete Car\n" +
+                " 5. Search Car\n" +
+                " 6. Update Car\n" +
                 "\n" +
-                " 6. Create Renter\n" +
-                " 7. Show all Renters\n" +
-                " 8. Delete Renter\n" +
-                " 9. Search Renter\n" +
-                "10. Update Renter\n\n" +
-                "11. Create contract" +
+                " 7. Create Renter\n" +
+                " 8. Show all Renters\n" +
+                " 9. Delete Renter\n" +
+                "10. Search Renter\n" +
+                "11. Update Renter\n\n" +
+                "12. Create contract\n" +
+                "13. Show all contracts\n" +
                 "Q. Quit\n");
 
         String choice = in.nextLine().toLowerCase();
@@ -65,16 +69,19 @@ public class Menu {
         switch (choice) {
             case "1" -> menuChoice = MenuChoice.CREATE_CAR;
             case "2" -> menuChoice = MenuChoice.SHOW_ALL_CARS;
-            case "3" -> menuChoice = MenuChoice.DELETE_CAR;
-            case "4" -> menuChoice = MenuChoice.SEARCH_CAR;
-            case "5" -> menuChoice = MenuChoice.UPDATE_CAR;
+            case "3" -> menuChoice = MenuChoice.SHOW_LUXURY_CARS;
+            case "4" -> menuChoice = MenuChoice.DELETE_CAR;
+            case "5" -> menuChoice = MenuChoice.SEARCH_CAR;
+            case "6" -> menuChoice = MenuChoice.UPDATE_CAR;
 
-            case "6" -> menuChoice = MenuChoice.CREATE_RENTER;
-            case "7" -> menuChoice = MenuChoice.SHOW_ALL_RENTERS;
-            case "8" -> menuChoice = MenuChoice.DELETE_RENTER;
-            case "9" -> menuChoice = MenuChoice.SEARCH_RENTER;
-            case "10" -> menuChoice = MenuChoice.UPDATE_RENTER;
-            case "11" -> menuChoice = MenuChoice.CREATE_CONTRACT;
+            case "7" -> menuChoice = MenuChoice.CREATE_RENTER;
+            case "8" -> menuChoice = MenuChoice.SHOW_ALL_RENTERS;
+            case "9" -> menuChoice = MenuChoice.DELETE_RENTER;
+            case "10" -> menuChoice = MenuChoice.SEARCH_RENTER;
+            case "11" -> menuChoice = MenuChoice.UPDATE_RENTER;
+
+            case "12" -> menuChoice = MenuChoice.CREATE_CONTRACT;
+            case "13" -> menuChoice = MenuChoice.SHOW_ALL_FULL_CONTRACTS;
             case "Q" -> menuChoice = MenuChoice.QUIT;
         }
         return menuChoice;
@@ -84,6 +91,8 @@ public class Menu {
 // CREATE CAR *
 // SHOW ALL CARS *
 // PRINT CARS *
+// SHOW LUXURY CARS *
+// PRINT ALL LUXERY CARS *
 // DELETE CAR *
 // SEARCH CAR *
 // UPDATE CAR *
@@ -95,7 +104,7 @@ public class Menu {
     private void createCar() {
         Car car = userTypesCar();
         mySqlConnection.addCar(car);
-        int car_id = mySqlConnection.getLatestCarId(); // lavet en ny metode i MySqlConnection klassen som returnerer det sidst oprettede car_id
+        int car_id = mySqlConnection.getLatestCarId();
         if (car_id == 0) {
 
         }
@@ -103,30 +112,30 @@ public class Menu {
             car_id += 0;
         }
         System.out.println(car_id);
-        System.out.println("Specify Car: \n" + // har lavet mulighederne her i stedet for i specifyCar(); i MySqlConnection
+        System.out.println("Specify Car: \n" +
                 "1. Luxury Car." +
                 "2. Family Car." +
                 "3. Sports Car. ");
 
         int inputChoice = scanner.nextInt();
         scanner.nextLine(); // ScannerBug
-        LuxuryCar luxuryCar = new LuxuryCar(); // så man bliver sendt til den metode som passer til den valgte underklasse
-        FamilyCar familyCar = new FamilyCar(); // same as above
-        SportsCar sportsCar = new SportsCar();    // same same again
+        LuxuryCar luxuryCar = new LuxuryCar();
+        FamilyCar familyCar = new FamilyCar();
+        SportsCar sportsCar = new SportsCar();
         switch (inputChoice) {
 
-            case 1 ->  luxuryCar = (LuxuryCar) userTypesLuxuryCar(car_id); // IntelliJ ville have (luxeryCar) castet.
+            case 1 ->  luxuryCar = (LuxuryCar) userTypesLuxuryCar(car_id);
             case 2 -> familyCar = (FamilyCar) userTypesFamilyCar(car_id);
             case 3 -> sportsCar = (SportsCar) userTypesSportsCar(car_id);
         }
         if (inputChoice == 1) {
-            mySqlConnection.specifyCar( luxuryCar, car_id, inputChoice); // vi sender inputChoice med så switchen automatisk udføres i specifyCar(); i MySqlConnection
+            mySqlConnection.specifyCar( luxuryCar, car_id, inputChoice);
         }
         else if (inputChoice == 2) {
-            mySqlConnection.specifyCar(familyCar, car_id, inputChoice); // same
+            mySqlConnection.specifyCar(familyCar, car_id, inputChoice);
         }
         else if (inputChoice == 3) {
-            mySqlConnection.specifyCar(sportsCar, car_id, inputChoice); // same
+            mySqlConnection.specifyCar(sportsCar, car_id, inputChoice);
         }
         else {
             System.out.println("Invalid number");
@@ -138,11 +147,34 @@ public class Menu {
         printCars(cars);
     }
 
-
     private void printCars(ArrayList<Car> cars) {
         for (Car c : cars) {
             System.out.println(c);
         }
+    }
+
+    private void showLuxuryCars() {
+        ArrayList<LuxuryCar> luxuryCars = mySqlConnection.getLuxuryCar();
+        printAllLuxuryCars(luxuryCars);
+    }
+
+    private void printAllLuxuryCars(ArrayList<LuxuryCar> luxuryCars) {
+        for (LuxuryCar l : luxuryCars) {
+            System.out.println("LUXURY CAR ID: " + l.getLuxId() + " WITH REG.NUMBER: " + l.getRegistrationNumber());
+            System.out.println("Brand: " + l.getBrand());
+            System.out.println("Model: " + l.getModel());
+            System.out.println("Fuel Type: " + l.getFuelType());
+            System.out.println("Registration Yeah and Month: " + l.getRegistrationYearMonth());
+            System.out.println("Drivin Km: " + l.getDrivinKm());
+            System.out.println("Ccm: " + l.getCcm());
+            System.out.println("Gear: " + l.getGear());
+            System.out.println("Aircondition: " + l.isAircondition());
+            System.out.println("Speed Pilot: " + l.isSpeedPilot());
+            System.out.println("Leather Seats: " + l.isLeatherSeats() + "\n");
+
+        }
+
+
     }
 
     private void deleteCar(){
@@ -163,7 +195,8 @@ public class Menu {
     }
 
     public void updateCar() {
-        System.out.println("What do you want to change?\n1. Brand\n2. Model\n3. Fuel Type\n4. Registration Number\n5. Registration Year and Month\n 6. Drivin km");
+        System.out.println("What do you want to change?\n1. Brand\n2. Model\n3. Fuel Type\n" +
+                "4. Registration Number\n5. Registration Year and Month\n 6. Drivin km");
         Scanner scanner = new Scanner(System.in);
         int number = scanner.nextInt();
         scanner.nextLine();
@@ -198,7 +231,7 @@ public class Menu {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         LocalDate registrationYearMonth =LocalDate.parse(dateString, formatter);
         System.out.println("Km drivin: ");
-        int drivinKm = scanner.nextInt();
+        double drivinKm = scanner.nextDouble();
         scanner.nextLine(); //ScannerBug
 
         Car car = new Car (brand, model, fuelType, registrationNumber, registrationYearMonth, drivinKm);
@@ -209,7 +242,7 @@ public class Menu {
         Scanner scanner = new Scanner(System.in);
         System.out.println("\n LUXURY CAR:");
         System.out.print("Motor Cubic CM: ");
-        int ccm = scanner.nextInt();
+        double ccm = scanner.nextDouble();
         scanner.nextLine(); //ScannerBug
         System.out.print("Gear Type:\n1. AutomatGear\n2. ManueltGear\n3. Manuelt_4\n" +
                 "4. Manuelt_5\n5. Manuelt_6\n6. Manuelt_7");
@@ -292,7 +325,7 @@ public class Menu {
         }
 
         System.out.print("HP: ");
-        int hp = scanner.nextInt();
+        double hp = scanner.nextDouble();
         scanner.nextLine(); //ScannerBug
 
         SportsCar sportsCar = new SportsCar(carId, gear, hp);
@@ -336,8 +369,8 @@ public class Menu {
     private void searchRenter(){
         Scanner scanner = new Scanner(System.in);
         System.out.println("Type the renter id: ");
-        int searchRenter = scanner.nextInt(); //Taget herfra så man kan se hvilken renter man gerne vil lave en kontrakt på.
-        scanner.nextLine(); //TODO
+        int searchRenter = scanner.nextInt();
+        scanner.nextLine();
         mySqlConnection.searchForRenter(searchRenter);
     }
 
@@ -378,6 +411,8 @@ public class Menu {
     /* ************************************ CONTRACT STUFF ************************************///TODO
 // CREATE CONTRACT *
 // USER TYPES CONTRACT *
+// SHOW ALL CONTRACTS *
+// PRINT CONTRACTS *
 
     private void createContract() {
         System.out.println("NEW CONTRACT: ");
@@ -388,60 +423,15 @@ public class Menu {
         System.out.println("Renter found. BLAVBLA");
         Contract contract = new Contract();
 
-        // contract = userTypesContract(rentId);
         contract = (Contract) userTypesContract(searchRenter);
 
         mySqlConnection.addContract(contract, searchRenter);
 
 
-      /* System.out.println("Create contract on an Existing renter.\n" +
-                "Write renter id: ");
-        int rentId = scanner.nextInt(); //TODO
-        int getRenterFromId = mySqlConnection.getRenterWithId();
-
-        System.out.println("Renter ID found: " + getRenterFromId);
-
-
-        if (searchRenter == getRenterFromId){
-            Contract contract = new Contract();
-
-           // contract = userTypesContract(rentId);
-            contract = (Contract) userTypesContract(rentId);
-
-            mySqlConnection.addContract(contract, rentId);
-        } else{
-            System.out.println("Renter ID not found");
-
-        }
-
-       */
-
     }
 
-
     private Contract userTypesContract(int rentId) {
-       /* System.out.println("NEW CONTRACT: ");
-        System.out.println("Write an already existing renter ID: ");
-        int searchRenter = scanner.nextInt();
-        scanner.nextLine();
-        mySqlConnection.searchForRenter(searchRenter);
-        System.out.println("Renter found.");
 
-        */
-      /*  System.out.println("Name: ");
-        String fullName = scanner.nextLine();
-        System.out.println("Adress: ");
-        String adress = scanner.nextLine();
-        System.out.println("zipcode: ");
-        int zipcode = scanner.nextInt();
-        scanner.nextLine();
-        System.out.println("City: ");
-        String city = scanner.nextLine();
-        System.out.println("Driver license number: ");
-        int driverLicenseNumber = scanner.nextInt();
-        scanner.nextLine();
-
-       */
         System.out.println("Rent car - Date from: ");
         String carRentDateFrom = scanner.nextLine();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -462,6 +452,30 @@ public class Menu {
         Contract contract = new Contract(rentId, dateFrom,
                 dateTo, maxKm, kmStart, registrationNumber);
         return contract;
+
+    }
+
+
+    private void showAllFullContracts() {
+        ArrayList<Contract> fullContracs = mySqlConnection.getFullContracts();
+        printAllFullContracts(fullContracs);
+    }
+
+    private void printAllFullContracts(ArrayList<Contract> fContracts) {
+        for (Contract fc : fContracts) {
+            System.out.println("CONTRACT ID: " + fc.getContractId());
+            System.out.println("Name: " + fc.getFullName());
+            System.out.println("Address: " + fc.getAdress());
+            System.out.println("Zipcode: " + fc.getZipcode());
+            System.out.println("City: " + fc.getCity());
+
+            System.out.println("RENTING CAR WITH REG.NUMBER: " + fc.getRegistrationNumber());
+            System.out.println("Date From: " + fc.getDateFrom());
+            System.out.println("Date To: " + fc.getDateTo());
+            System.out.println("Max Km: " + fc.getMaxKm());
+            System.out.println("Km Start: " + fc.getKmStart()+ "\n");
+
+        }
 
     }
 

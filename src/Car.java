@@ -8,10 +8,10 @@ public class Car {
     private String fuelType;
     private String registrationNumber;
     private LocalDate registrationYearMonth;
-    private int drivinKm;
+    private double drivinKm;
 
     public Car(int carId, String brand, String model, String fuelType,
-               String registrationNumber, LocalDate registrationYearMonth, int drivinKm) {
+               String registrationNumber, LocalDate registrationYearMonth, double drivinKm) {
         this.carId = carId;
         this.brand = brand;
         this.model = model;
@@ -21,7 +21,7 @@ public class Car {
         this.drivinKm = drivinKm;
     }
     public Car(String brand, String model, String fuelType,
-               String registrationNumber, LocalDate registrationYearMonth, int drivinKm) {
+               String registrationNumber, LocalDate registrationYearMonth, double drivinKm) {
         this.brand = brand;
         this.model = model;
         this.fuelType = fuelType;
@@ -58,7 +58,7 @@ public class Car {
         return registrationYearMonth;
     }
 
-    public int getDrivinKm() {
+    public double getDrivinKm() {
         return drivinKm;
     }
 

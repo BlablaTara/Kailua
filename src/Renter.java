@@ -43,6 +43,16 @@ public class Renter {
         this.licenseDateOfIssue = licenseDateOfIssue;
     }
 
+    public Renter(String fullName, String adress, int zipcode,
+                  String city, int driverLicenseNumber) {
+        this.fullName = fullName;
+        this.adress = adress;
+        this.zipcode = zipcode;
+        this.city = city;
+        this.driverLicenseNumber = driverLicenseNumber;
+    }
+
+
     public Renter() {
     }
 

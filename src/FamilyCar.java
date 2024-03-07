@@ -9,7 +9,7 @@ public class FamilyCar extends Car{
     private Seat seat;
 
     public FamilyCar(int carId, String brand, String model, String fuelType, String registrationNumber,
-                     LocalDate registrationYearMonth, int drivinKm, int famId, Gear gear,
+                     LocalDate registrationYearMonth, double drivinKm, int famId, Gear gear,
                      boolean aircondition, boolean speedPilot, Seat seat) {
         super(carId, brand, model, fuelType, registrationNumber, registrationYearMonth, drivinKm);
         this.famId = famId;
